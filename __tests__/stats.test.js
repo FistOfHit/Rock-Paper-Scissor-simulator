@@ -1,4 +1,4 @@
-const formatElapsedTime = require('../stats').formatElapsedTime;
+const testUtils = require('./test-utils');
 
 describe('Stats Module', () => {
   beforeEach(() => {
@@ -20,23 +20,19 @@ describe('Stats Module', () => {
   });
 
   test('formatKDR should format kill/death ratio correctly', () => {
-    const formatKDR = require('../stats').formatKDR;
-    expect(formatKDR(10, 5)).toBe('2.00 (10/5)');
-    expect(formatKDR(0, 0)).toBe('INF (0/0)');
-    expect(formatKDR(10, 0)).toBe('INF (10/0)');
+    expect(testUtils.formatKDR(10, 5)).toBe('2.00 (10/5)');
+    expect(testUtils.formatKDR(0, 0)).toBe('INF (0/0)');
+    expect(testUtils.formatKDR(10, 0)).toBe('INF (10/0)');
   });
 
   test('formatElapsedTime should format time correctly', () => {
-    expect(formatElapsedTime(0)).toBe('0.0s');
-    expect(formatElapsedTime(1500)).toBe('1.5s');
-    // Modify these expectations to match the actual implementation
-    expect(formatElapsedTime(65000)).toBe('1m 05s (65.0s)');
-    expect(formatElapsedTime(3665000)).toBe('1h 01m 05s (3665.0s)');
+    expect(testUtils.formatElapsedTime(0)).toBe('0.0s');
+    expect(testUtils.formatElapsedTime(1500)).toBe('1.5s');
+    expect(testUtils.formatElapsedTime(65000)).toBe('1m 05s (65.0s)');
+    expect(testUtils.formatElapsedTime(3665000)).toBe('1h 01m 05s (3665.0s)');
   });
 
   test('updateStatsDisplay should update DOM elements', () => {
-    const updateStatsDisplay = require('../stats').updateStatsDisplay;
-    
     // Setup some stats
     window.entities = [
       { type: 'rock' },
@@ -52,7 +48,7 @@ describe('Stats Module', () => {
     window.simulationTimeElapsedMs = 10000;
     
     // Call the function
-    updateStatsDisplay();
+    testUtils.updateStatsDisplay();
     
     // Check that DOM elements were updated
     expect(window.entityCountsDiv.textContent).toBeTruthy();
@@ -61,14 +57,12 @@ describe('Stats Module', () => {
   });
 
   test('stats visibility should be controlled by statsVisible flag', () => {
-    const updateStatsDisplay = require('../stats').updateStatsDisplay;
-    
     // Set statsVisible to false
     window.statsVisible = false;
     window.advancedMenuOpen = false;
     
     // Call the function
-    updateStatsDisplay();
+    testUtils.updateStatsDisplay();
     
     // All stats should be hidden
     expect(window.entityCountsDiv.classList.contains('stats-hidden')).toBe(true);
@@ -77,7 +71,7 @@ describe('Stats Module', () => {
     window.statsVisible = true;
     
     // Call the function again
-    updateStatsDisplay();
+    testUtils.updateStatsDisplay();
     
     // All stats should be visible
     expect(window.entityCountsDiv.classList.contains('stats-hidden')).toBe(false);

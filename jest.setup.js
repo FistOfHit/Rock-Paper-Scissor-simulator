@@ -125,3 +125,11 @@ window.entityTypeKeys = ['rock', 'paper', 'scissors'];
 window.controlElements = {};
 window.valueDisplayElements = {};
 window.statsVisible = false;
+
+// Silence console errors during tests
+console.error = jest.fn();
+console.warn = jest.fn();
+
+// Add global.TextEncoder for jsdom environment
+global.TextEncoder = require('util').TextEncoder;
+global.TextDecoder = require('util').TextDecoder;

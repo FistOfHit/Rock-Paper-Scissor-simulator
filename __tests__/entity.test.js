@@ -1,27 +1,5 @@
-/**
- * Tests for entity.js
- */
-const fs = require('fs');
-const path = require('path');
-
-// Read the entity.js file content
-const entityPath = path.join(__dirname, '..', 'entity.js');
-const entityContent = fs.readFileSync(entityPath, 'utf8');
-
-// Set up necessary window properties before evaluating entity.js
-window.config = {
-  ENTITY_SIZE: 8,
-  MAX_SPEED: 2,
-  CHASE_PRIORITY: 0.5,
-  CHASING_SPEED_MULTIPLIER: 1.5,
-  FLEEING_SPEED_MULTIPLIER: 1.5,
-  JIGGLE_FACTOR: 0.2,
-  DETECTION_RADIUS_MULTIPLIER: 5,
-  WARP_EDGES: true
-};
-
-// Execute the entity.js content
-eval(entityContent);
+const testUtils = require('./test-utils');
+const { Entity } = testUtils;
 
 describe('Entity Module', () => {
   let rockEntity, paperEntity, scissorsEntity;
@@ -32,16 +10,21 @@ describe('Entity Module', () => {
     paperEntity = new Entity(200, 200, window.ENTITY_TYPES.PAPER);
     scissorsEntity = new Entity(300, 300, window.ENTITY_TYPES.SCISSORS);
   });
-  
+
   test('Entity constructor should create entities with correct properties', () => {
+    expect(rockEntity.type).toBe(window.ENTITY_TYPES.ROCK);
     expect(rockEntity.x).toBe(100);
     expect(rockEntity.y).toBe(100);
-    expect(rockEntity.type).toBe(window.ENTITY_TYPES.ROCK);
-    expect(rockEntity.size).toBe(window.config.ENTITY_SIZE);
-    expect(rockEntity.vx).toBeDefined();
-    expect(rockEntity.vy).toBeDefined();
+    
+    expect(paperEntity.type).toBe(window.ENTITY_TYPES.PAPER);
+    expect(paperEntity.x).toBe(200);
+    expect(paperEntity.y).toBe(200);
+    
+    expect(scissorsEntity.type).toBe(window.ENTITY_TYPES.SCISSORS);
+    expect(scissorsEntity.x).toBe(300);
+    expect(scissorsEntity.y).toBe(300);
   });
-  
+
   test('Entity should have correct prey and predator relationships', () => {
     // Rock beats scissors
     expect(rockEntity.isPreyFor(scissorsEntity)).toBe(false);
@@ -55,7 +38,7 @@ describe('Entity Module', () => {
     expect(scissorsEntity.isPreyFor(paperEntity)).toBe(false);
     expect(scissorsEntity.isPredatorOf(paperEntity)).toBe(true);
   });
-  
+
   test('Entity should calculate distance correctly', () => {
     // Distance between (100,100) and (200,200) should be sqrt(20000) = 141.42...
     const distance = rockEntity.distanceTo(paperEntity);

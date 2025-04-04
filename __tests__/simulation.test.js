@@ -1,3 +1,5 @@
+const testUtils = require('./test-utils');
+
 describe('Simulation Module', () => {
   let originalNow;
   
@@ -25,10 +27,8 @@ describe('Simulation Module', () => {
   });
 
   test('initializeEntities should create the correct number of entities', () => {
-    const initializeEntities = require('../simulation').initializeEntities;
-    
     // Call the function with specific counts
-    initializeEntities(10, 20, 30);
+    testUtils.initializeEntities(10, 20, 30);
     
     // Check that the correct number of entities were created
     expect(window.entities.length).toBe(60);
@@ -44,10 +44,8 @@ describe('Simulation Module', () => {
   });
 
   test('startSimulation should initialize simulation state correctly', () => {
-    const startSimulation = require('../simulation').startSimulation;
-    
     // Call the function
-    startSimulation(5, 5, 5);
+    testUtils.startSimulation(5, 5, 5);
     
     // Check that simulation state was initialized correctly
     expect(window.simulationRunning).toBe(true);
@@ -58,8 +56,6 @@ describe('Simulation Module', () => {
   });
 
   test('pauseResumeSimulation should toggle pause state', () => {
-    const pauseResumeSimulation = require('../simulation').pauseResumeSimulation;
-    
     // Setup initial state
     window.simulationRunning = true;
     window.isPaused = false;
@@ -67,21 +63,19 @@ describe('Simulation Module', () => {
     window.lastUpdateTime = 1000;
     
     // Pause the simulation
-    pauseResumeSimulation();
+    testUtils.pauseResumeSimulation();
     
     // Check that simulation is paused
     expect(window.isPaused).toBe(true);
     
     // Resume the simulation
-    pauseResumeSimulation();
+    testUtils.pauseResumeSimulation();
     
     // Check that simulation is resumed
     expect(window.isPaused).toBe(false);
   });
 
   test('resetSimulation should clear simulation state', () => {
-    const resetSimulation = require('../simulation').resetSimulation;
-    
     // Setup initial state
     window.entities = [{ id: 1 }, { id: 2 }, { id: 3 }];
     window.simulationRunning = true;
@@ -90,7 +84,7 @@ describe('Simulation Module', () => {
     window.simulationTimeElapsedMs = 5000;
     
     // Reset the simulation
-    resetSimulation();
+    testUtils.resetSimulation();
     
     // Check that simulation state was cleared
     expect(window.entities.length).toBe(0);
