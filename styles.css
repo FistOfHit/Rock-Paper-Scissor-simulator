@@ -1,0 +1,491 @@
+/* styles.css */
+/* --- Global Styles --- */
+body,
+button,
+input,
+label,
+h1,
+p,
+span,
+div {
+    font-family: 'Press Start 2P', cursive;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    color: #eee;
+    /* Light text on dark background */
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    /* Prevent mobile zoom issues */
+}
+
+html,
+body {
+    overscroll-behavior: none;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+}
+
+/* Hide scrollbars */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* --- Canvas --- */
+canvas {
+    display: block;
+    margin: 10px auto;
+    background-color: #1a1a1a;
+    border: 4px solid #444;
+    border-radius: 8px;
+    box-sizing: border-box;
+    max-width: 95%;
+    flex-shrink: 0;
+}
+
+/* --- Buttons --- */
+button {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid #000;
+    color: white;
+    text-shadow: 1px 1px #000;
+    box-shadow: 3px 3px 0px #000;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    border-radius: 4px;
+    font-size: 0.85em;
+    white-space: nowrap;
+    position: relative;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Consistent padding for main action buttons */
+#startButton,
+#resetButton,
+#advancedButton,
+#optimizeButton,
+#enableTypeSettingsBtn,
+#toggleStatsButton,
+#exportButton,
+#pauseResumeButton {
+    padding: 10px 24px;
+}
+
+button:active {
+    box-shadow: 1px 1px 0px #000;
+    transform: translate(2px, 2px) scale(1);
+}
+
+button:not(:disabled):hover {
+    transform: scale(1.05);
+}
+
+button:disabled {
+    background-color: #999 !important;
+    color: #ccc !important;
+    cursor: not-allowed;
+    box-shadow: 1px 1px 0px #555;
+    text-shadow: 1px 1px #555;
+}
+
+/* Specific Button Colors */
+#pauseResumeButton {
+    background-color: #607D8B;
+}
+
+/* Blue Grey */
+#pauseResumeButton.active {
+    background-color: #455A64;
+}
+
+/* Darker Blue Grey */
+#startButton {
+    background-color: #FACC15;
+    color: #000000;
+    text-shadow: none;
+}
+
+/* Yellow */
+#resetButton {
+    background-color: #f44336;
+}
+
+/* Red */
+#toggleStatsButton {
+    background-color: #00BCD4;
+}
+
+/* Cyan */
+#toggleStatsButton.active {
+    background-color: #0097A7;
+}
+
+/* Darker Cyan */
+#advancedButton {
+    background-color: #2196F3;
+}
+
+/* Blue */
+#exportButton {
+    background-color: #8BC34A;
+    margin-top: 5px;
+}
+
+/* Light Green */
+#optimizeButton {
+    background-color: #4CAF50;
+    cursor: help;
+}
+
+/* Green */
+#optimizeButton.active {
+    background-color: #FF9800;
+}
+
+/* Orange when active */
+#enableTypeSettingsBtn {
+    background-color: #673AB7;
+}
+
+/* Purple */
+#enableTypeSettingsBtn.active {
+    background-color: #9C27B0;
+}
+
+/* Darker Purple when active */
+.reset-defaults-button {
+    background-color: #757575;
+    font-size: 0.7em;
+    padding: 6px 12px;
+    box-shadow: 2px 2px 0px #000;
+    margin-top: 8px;
+}
+
+.reset-defaults-button:active {
+    box-shadow: 1px 1px 0px #000;
+    transform: translate(1px, 1px) scale(1);
+}
+
+/* --- Inputs & Labels --- */
+input[type="number"] {
+    padding: 6px;
+    border: 2px solid #000;
+    background-color: #eee;
+    color: #333;
+    text-align: center;
+    border-radius: 4px;
+    transition: box-shadow 0.1s ease;
+}
+
+input[type="number"]:not(:disabled):hover {
+    box-shadow: 0 0 8px 2px rgba(250, 204, 21, 0.6);
+}
+
+/* Yellow glow */
+/* Hide number input spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.input-number-custom {
+    font-size: 0.8em;
+    height: 38px;
+    box-sizing: border-box;
+}
+
+label {
+    color: #eee;
+    margin-right: 5px;
+    font-size: 0.65em;
+    white-space: nowrap;
+    cursor: help;
+    position: relative;
+}
+
+/* --- Layout Containers --- */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 100vh;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.controls-container {
+    background-color: #333;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px;
+    width: calc(100% - 20px);
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.input-groups-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 2px;
+}
+
+.control-group label {
+    font-size: 1.5em;
+    margin-right: 6px;
+    line-height: 1;
+}
+
+.action-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* --- Stats Display --- */
+.stats-line {
+    color: #bbb;
+    margin: 2px 0;
+    min-height: 15px;
+    font-size: 0.65em;
+    text-align: center;
+    word-break: break-word;
+    width: calc(100% - 20px);
+    max-width: 800px;
+    transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+    opacity: 1;
+    max-height: 100px;
+    overflow: hidden;
+}
+
+#entityCounts {
+    color: #eee;
+    font-size: 0.8em;
+    min-height: 20px;
+}
+
+.stats-hidden {
+    opacity: 0;
+    max-height: 0;
+    min-height: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* --- Advanced Settings Panel --- */
+.advanced-settings-container {
+    background-color: #424242;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 10px 0;
+    width: calc(100% - 20px);
+    max-width: 800px;
+    color: #eee;
+    overflow-y: auto;
+    max-height: calc(100vh - 250px);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.advanced-settings-container::-webkit-scrollbar {
+    display: none;
+}
+
+.advanced-settings-container h2 {
+    margin-bottom: 0px;
+}
+
+.advanced-settings-container h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9em;
+}
+
+.advanced-settings-container h4 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-size: 1.3em;
+    color: #ccc;
+}
+
+.advanced-settings-container hr {
+    border-color: #555;
+}
+
+/* Grid layout helper */
+.setting-row {
+    display: contents;
+}
+
+.canvas-size-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+/* Style for disabled global settings when type-specific is active */
+.global-setting-disabled label,
+.global-setting-disabled input,
+.global-setting-disabled span.value-display {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.global-setting-disabled input[type="range"]::-webkit-slider-thumb {
+    background: #999;
+}
+
+.global-setting-disabled input[type="range"]::-moz-range-thumb {
+    background: #999;
+}
+
+/* --- Sliders --- */
+input[type="range"] {
+    cursor: pointer;
+    height: 8px;
+    background: #555;
+    border-radius: 5px;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: box-shadow 0.1s ease;
+}
+
+input[type="range"]:not(:disabled):hover {
+    box-shadow: 0 0 6px 1px rgba(33, 150, 243, 0.5);
+}
+
+/* Subtle blue glow */
+input[type="range"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+input[type="range"]:disabled::-webkit-slider-thumb {
+    background: #999;
+}
+
+input[type="range"]:disabled::-moz-range-thumb {
+    background: #999;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #2196F3;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #2196F3;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.1s ease;
+}
+
+input[type="range"]:not(:disabled)::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+input[type="range"]:not(:disabled)::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+
+.value-display {
+    font-size: 0.65em;
+    min-width: 40px;
+    color: #FACC15;
+    text-align: right;
+}
+
+/* --- Checkbox --- */
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #2196F3;
+    transition: box-shadow 0.1s ease;
+    vertical-align: middle;
+}
+
+input[type="checkbox"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+input[type="checkbox"]:not(:disabled):hover {
+    box-shadow: 0 0 8px 2px rgba(33, 150, 243, 0.6);
+}
+
+/* Blue glow */
+
+/* --- Tooltip --- */
+.tooltip-text {
+    position: fixed;
+    background-color: #f0f0f0;
+    color: #1a1a1a;
+    border: 1px solid #1a1a1a;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 0.6em;
+    white-space: normal;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.1s ease-in-out, visibility 0.1s ease-in-out;
+    pointer-events: none;
+    width: max-content;
+    max-width: 200px;
+}
+
+.tooltip-text.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- Utility --- */
+.hidden {
+    display: none !important;
+}
+
+/* Simple hidden class */

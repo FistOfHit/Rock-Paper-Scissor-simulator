@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock-Paper-Scissor simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-gray-900">
+    <div class="main-container">
+        <h1 class="text-lg sm:text-xl md:text-2xl text-yellow-400 mb-3 text-center flex-shrink-0">Rock-Paper-Scissor
+            simulator</h1>
+
+        <div id="controls" class="controls-container">
+            <div class="input-groups-container">
+                <div class="control-group"> <label for="rocks">⛰️:</label> <input type="number" id="rocks" value="50"
+                        min="0" class="w-24 input-number-custom rounded border-2 border-black"> </div>
+                <div class="control-group"> <label for="papers">📄:</label> <input type="number" id="papers" value="50"
+                        min="0" class="w-24 input-number-custom rounded border-2 border-black"> </div>
+                <div class="control-group"> <label for="scissors">✂️:</label> <input type="number" id="scissors"
+                        value="50" min="0" class="w-24 input-number-custom rounded border-2 border-black"> </div>
+            </div>
+            <div class="action-buttons-container">
+                <button id="startButton">Start</button>
+                <button id="resetButton" class="hidden">Reset</button>
+                <button id="pauseResumeButton" disabled>Pause</button>
+                <button id="toggleStatsButton">Show Stats</button>
+                <button id="advancedButton">Advanced</button>
+            </div>
+        </div>
+
+        <div id="entityCounts" class="stats-line text-center flex-shrink-0"></div>
+        <div id="simulationTimeDisplay" class="stats-line text-center flex-shrink-0"></div>
+        <div id="killDeathCounts" class="stats-line text-center flex-shrink-0"></div>
+        <div id="avgLifespanDisplay" class="stats-line text-center flex-shrink-0" style="white-space: pre-line;"></div>
+        <div id="conversionRateDisplay" class="stats-line text-center flex-shrink-0" style="white-space: pre-line;">
+        </div>
+        <div id="avgSpeedDisplay" class="stats-line text-center flex-shrink-0" style="white-space: pre-line;"></div>
+        <div class="text-center flex-shrink-0">
+            <button id="exportButton" class="hidden">Export Results</button>
+        </div>
+
+        <div id="advancedSettings" class="advanced-settings-container hidden flex-shrink-0
+                    grid gap-y-3 md:grid-cols-[auto_1fr_auto] md:gap-x-4 md:gap-y-2 md:items-center">
+            <h2 class="text-lg text-center col-span-full md:col-span-3">Advanced Settings</h2>
+            <p class="text-xs text-gray-400 text-center col-span-full md:col-span-3 mb-3">(hover over option names for
+                help)</p>
+
+            <div class="col-span-full md:col-span-3 canvas-size-row">
+                <label for="canvasWidth" data-tooltip-target="tooltip-canvas-width">Canvas Width:</label>
+                <input type="number" id="canvasWidth" min="100" step="10" placeholder="auto"
+                    class="w-24 input-number-custom">
+                <span class="tooltip-text" id="tooltip-canvas-width">Set width in pixels. Leave blank for default square
+                    size.</span>
+            </div>
+            <div class="col-span-full md:col-span-3 canvas-size-row">
+                <label for="canvasHeight" data-tooltip-target="tooltip-canvas-height">Canvas Height:</label>
+                <input type="number" id="canvasHeight" min="100" step="10" placeholder="auto"
+                    class="w-24 input-number-custom">
+                <span class="tooltip-text" id="tooltip-canvas-height">Set height in pixels. Leave blank for default
+                    square size.</span>
+            </div>
+            <div class="flex items-center justify-start col-span-full md:col-span-3 mt-2 global-setting">
+                <label data-tooltip-target="tooltip-warp">Warp Edges (Torus):</label>
+                <input type="checkbox" id="warpEdgesCheckbox" class="ml-16 mr-4">
+                <span class="tooltip-text" id="tooltip-warp">If checked, entities moving off one edge reappear on the
+                    opposite edge.</span>
+            </div>
+            <div id="optimizeButtonContainer" class="col-span-full md:col-span-3 text-center mt-2 global-setting">
+                <button id="optimizeButton" data-tooltip-target="tooltip-optimize">Enable Perf Mode</button>
+                <span class="tooltip-text" id="tooltip-optimize">Faster algorithm for many entities, but disables
+                    Detection Radius slider.</span>
+            </div>
+
+            <hr class="col-span-full md:col-span-3 border-gray-500 my-2">
+
+            <div class="setting-row global-setting"> <label for="entitySizeSlider"
+                    data-tooltip-target="tooltip-entity-size">Entity Size:</label> <input type="range"
+                    id="entitySizeSlider" min="2" max="15" step="1"> <span id="entitySizeValue"
+                    class="value-display"></span> <span class="tooltip-text" id="tooltip-entity-size">Visual size and
+                    collision radius.</span> </div>
+            <div class="setting-row global-setting"> <label for="maxSpeedSlider"
+                    data-tooltip-target="tooltip-max-speed">Entity Speed:</label> <input type="range"
+                    id="maxSpeedSlider" min="1" max="5" step="0.1"> <span id="maxSpeedValue"
+                    class="value-display"></span> <span class="tooltip-text" id="tooltip-max-speed">Base movement
+                    speed.</span> </div>
+            <div class="setting-row global-setting"> <label for="chasePrioritySlider"
+                    data-tooltip-target="tooltip-chase-priority">Chase Priority:</label> <input type="range"
+                    id="chasePrioritySlider" min="0" max="1" step="0.01"> <span id="chasePriorityValue"
+                    class="value-display"></span> <span class="tooltip-text" id="tooltip-chase-priority">Balances
+                    chasing prey vs. fleeing predators (0=Flee, 0.5=Balanced, 1=Chase).</span> </div>
+            <div class="setting-row global-setting"> <label for="chasingSpeedMultiplierSlider"
+                    data-tooltip-target="tooltip-chase-mult">Chasing Speed Multiplier:</label> <input type="range"
+                    id="chasingSpeedMultiplierSlider" min="1" max="2" step="0.1"> <span id="chasingSpeedMultiplierValue"
+                    class="value-display"></span> <span class="tooltip-text" id="tooltip-chase-mult">Speed boost when
+                    chasing (1 = no boost).</span> </div>
+            <div class="setting-row global-setting"> <label for="fleeingSpeedMultiplierSlider"
+                    data-tooltip-target="tooltip-flee-mult">Fleeing Speed Multiplier:</label> <input type="range"
+                    id="fleeingSpeedMultiplierSlider" min="1" max="2" step="0.1"> <span id="fleeingSpeedMultiplierValue"
+                    class="value-display"></span> <span class="tooltip-text" id="tooltip-flee-mult">Speed boost when
+                    fleeing (1 = no boost).</span> </div>
+            <div class="setting-row global-setting"> <label for="jiggleSlider"
+                    data-tooltip-target="tooltip-jiggle">Motion Jiggle (Factor):</label> <input type="range"
+                    id="jiggleSlider" min="0" max="1" step="0.01"> <span id="jiggleValue" class="value-display"></span>
+                <span class="tooltip-text" id="tooltip-jiggle">Adds random wobble to movement (0-1 strength).</span>
+            </div>
+            <div class="setting-row global-setting"> <label for="separationDistanceSlider"
+                    data-tooltip-target="tooltip-sep-dist">Separation Dist (xSize):</label> <input type="range"
+                    id="separationDistanceSlider" min="0" max="1" step="0.1"> <span id="separationDistanceValue"
+                    class="value-display"></span> <span class="tooltip-text" id="tooltip-sep-dist">Min distance from
+                    same-type neighbours (multiple of size).</span> </div>
+            <div class="setting-row global-setting"> <label for="separationStrengthSlider"
+                    data-tooltip-target="tooltip-sep-str">Separation Str:</label> <input type="range"
+                    id="separationStrengthSlider" min="0" max="3" step="0.1"> <span id="separationStrengthValue"
+                    class="value-display"></span> <span class="tooltip-text" id="tooltip-sep-str">How strongly
+                    neighbours push away.</span> </div>
+            <div class="setting-row global-setting"> <label for="detectionRadiusSlider"
+                    data-tooltip-target="tooltip-detect-radius">Detection Radius (xSize):</label> <input type="range"
+                    id="detectionRadiusSlider" min="2" max="101" step="1"> <span id="detectionRadiusValue"
+                    class="value-display"></span> <span class="tooltip-text" id="tooltip-detect-radius">How far entities
+                    'see' prey/predators (multiple of size). Disabled in Perf Mode. 101 = Infinite.</span> </div>
+            <div class="setting-row global-setting"> <label for="predationRadiusSlider"
+                    data-tooltip-target="tooltip-predation-radius">Predation Radius (xSize):</label> <input type="range"
+                    id="predationRadiusSlider" min="0.5" max="3" step="0.1"> <span id="predationRadiusValue"
+                    class="value-display"></span> <span class="tooltip-text" id="tooltip-predation-radius">How close
+                    predator must be to convert prey (multiple of predator size).</span> </div>
+
+            <div class="col-span-full md:col-span-3 text-center mt-3 global-setting">
+                <button id="resetGlobalDefaultsButton" class="reset-defaults-button">Reset Global to Defaults</button>
+            </div>
+
+            <hr class="col-span-full md:col-span-3 border-gray-500 my-4">
+
+            <h3 class="text-center col-span-full md:col-span-3">Type-specific settings</h3>
+            <div class="col-span-full md:col-span-3 text-center mb-2">
+                <button id="enableTypeSettingsBtn">Enable Type-Specific Settings</button>
+            </div>
+
+            <div id="typeSettingsContainer"
+                class="hidden col-span-full md:col-span-3 grid gap-y-3 md:grid-cols-[auto_1fr_auto] md:gap-x-4 md:gap-y-2 md:items-center">
+                <h4 class="col-span-full md:col-span-3 mt-1">Rock ⛰️ Settings</h4>
+                <div class="setting-row type-setting type-setting-rock"> <label for="entitySizeSlider_rock">Entity
+                        Size:</label> <input type="range" id="entitySizeSlider_rock" min="2" max="15" step="1" disabled>
+                    <span id="entitySizeValue_rock" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-rock"> <label for="maxSpeedSlider_rock">Entity
+                        Speed:</label> <input type="range" id="maxSpeedSlider_rock" min="1" max="5" step="0.1" disabled>
+                    <span id="maxSpeedValue_rock" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-rock"> <label for="chasePrioritySlider_rock">Chase
+                        Priority:</label> <input type="range" id="chasePrioritySlider_rock" min="0" max="1" step="0.01"
+                        disabled> <span id="chasePriorityValue_rock" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-rock"> <label
+                        for="chasingSpeedMultiplierSlider_rock">Chasing Speed Multiplier:</label> <input type="range"
+                        id="chasingSpeedMultiplierSlider_rock" min="1" max="2" step="0.1" disabled> <span
+                        id="chasingSpeedMultiplierValue_rock" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-rock"> <label
+                        for="fleeingSpeedMultiplierSlider_rock">Fleeing Speed Multiplier:</label> <input type="range"
+                        id="fleeingSpeedMultiplierSlider_rock" min="1" max="2" step="0.1" disabled> <span
+                        id="fleeingSpeedMultiplierValue_rock" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-rock"> <label for="jiggleSlider_rock">Motion Jiggle
+                        (Factor):</label> <input type="range" id="jiggleSlider_rock" min="0" max="1" step="0.01"
+                        disabled> <span id="jiggleValue_rock" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-rock"> <label
+                        for="separationDistanceSlider_rock">Separation Dist (xSize):</label> <input type="range"
+                        id="separationDistanceSlider_rock" min="0" max="1" step="0.1" disabled> <span
+                        id="separationDistanceValue_rock" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-rock"> <label
+                        for="separationStrengthSlider_rock">Separation Str:</label> <input type="range"
+                        id="separationStrengthSlider_rock" min="0" max="3" step="0.1" disabled> <span
+                        id="separationStrengthValue_rock" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-rock"> <label
+                        for="detectionRadiusSlider_rock">Detection Radius (xSize):</label> <input type="range"
+                        id="detectionRadiusSlider_rock" min="2" max="101" step="1" disabled> <span
+                        id="detectionRadiusValue_rock" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-rock"> <label
+                        for="predationRadiusSlider_rock">Predation Radius (xSize):</label> <input type="range"
+                        id="predationRadiusSlider_rock" min="0.5" max="3" step="0.1" disabled> <span
+                        id="predationRadiusValue_rock" class="value-display"></span></div>
+                <div class="col-span-full md:col-span-3 text-center type-setting type-setting-rock"> <button
+                        id="resetRockDefaultsButton" class="reset-defaults-button">Reset Rock to Defaults</button>
+                </div>
+
+                <hr class="col-span-full md:col-span-3 border-gray-600 my-2">
+
+                <h4 class="col-span-full md:col-span-3 mt-1">Paper 📄 Settings</h4>
+                <div class="setting-row type-setting type-setting-paper"> <label for="entitySizeSlider_paper">Entity
+                        Size:</label> <input type="range" id="entitySizeSlider_paper" min="2" max="15" step="1"
+                        disabled> <span id="entitySizeValue_paper" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-paper"> <label for="maxSpeedSlider_paper">Entity
+                        Speed:</label> <input type="range" id="maxSpeedSlider_paper" min="1" max="5" step="0.1"
+                        disabled> <span id="maxSpeedValue_paper" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-paper"> <label for="chasePrioritySlider_paper">Chase
+                        Priority:</label> <input type="range" id="chasePrioritySlider_paper" min="0" max="1" step="0.01"
+                        disabled> <span id="chasePriorityValue_paper" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-paper"> <label
+                        for="chasingSpeedMultiplierSlider_paper">Chasing Speed Multiplier:</label> <input type="range"
+                        id="chasingSpeedMultiplierSlider_paper" min="1" max="2" step="0.1" disabled> <span
+                        id="chasingSpeedMultiplierValue_paper" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-paper"> <label
+                        for="fleeingSpeedMultiplierSlider_paper">Fleeing Speed Multiplier:</label> <input type="range"
+                        id="fleeingSpeedMultiplierSlider_paper" min="1" max="2" step="0.1" disabled> <span
+                        id="fleeingSpeedMultiplierValue_paper" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-paper"> <label for="jiggleSlider_paper">Motion Jiggle
+                        (Factor):</label> <input type="range" id="jiggleSlider_paper" min="0" max="1" step="0.01"
+                        disabled> <span id="jiggleValue_paper" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-paper"> <label
+                        for="separationDistanceSlider_paper">Separation Dist (xSize):</label> <input type="range"
+                        id="separationDistanceSlider_paper" min="0" max="1" step="0.1" disabled> <span
+                        id="separationDistanceValue_paper" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-paper"> <label
+                        for="separationStrengthSlider_paper">Separation Str:</label> <input type="range"
+                        id="separationStrengthSlider_paper" min="0" max="3" step="0.1" disabled> <span
+                        id="separationStrengthValue_paper" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-paper"> <label
+                        for="detectionRadiusSlider_paper">Detection Radius (xSize):</label> <input type="range"
+                        id="detectionRadiusSlider_paper" min="2" max="101" step="1" disabled> <span
+                        id="detectionRadiusValue_paper" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-paper"> <label
+                        for="predationRadiusSlider_paper">Predation Radius (xSize):</label> <input type="range"
+                        id="predationRadiusSlider_paper" min="0.5" max="3" step="0.1" disabled> <span
+                        id="predationRadiusValue_paper" class="value-display"></span></div>
+                <div class="col-span-full md:col-span-3 text-center type-setting type-setting-paper"> <button
+                        id="resetPaperDefaultsButton" class="reset-defaults-button">Reset Paper to Defaults</button>
+                </div>
+
+                <hr class="col-span-full md:col-span-3 border-gray-600 my-2">
+
+                <h4 class="col-span-full md:col-span-3 mt-1">Scissors ✂️ Settings</h4>
+                <div class="setting-row type-setting type-setting-scissors"> <label
+                        for="entitySizeSlider_scissors">Entity Size:</label> <input type="range"
+                        id="entitySizeSlider_scissors" min="2" max="15" step="1" disabled> <span
+                        id="entitySizeValue_scissors" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-scissors"> <label for="maxSpeedSlider_scissors">Entity
+                        Speed:</label> <input type="range" id="maxSpeedSlider_scissors" min="1" max="5" step="0.1"
+                        disabled> <span id="maxSpeedValue_scissors" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-scissors"> <label
+                        for="chasePrioritySlider_scissors">Chase Priority:</label> <input type="range"
+                        id="chasePrioritySlider_scissors" min="0" max="1" step="0.01" disabled> <span
+                        id="chasePriorityValue_scissors" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-scissors"> <label
+                        for="chasingSpeedMultiplierSlider_scissors">Chasing Speed Multiplier:</label> <input
+                        type="range" id="chasingSpeedMultiplierSlider_scissors" min="1" max="2" step="0.1" disabled>
+                    <span id="chasingSpeedMultiplierValue_scissors" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-scissors"> <label
+                        for="fleeingSpeedMultiplierSlider_scissors">Fleeing Speed Multiplier:</label> <input
+                        type="range" id="fleeingSpeedMultiplierSlider_scissors" min="1" max="2" step="0.1" disabled>
+                    <span id="fleeingSpeedMultiplierValue_scissors" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-scissors"> <label for="jiggleSlider_scissors">Motion
+                        Jiggle (Factor):</label> <input type="range" id="jiggleSlider_scissors" min="0" max="1"
+                        step="0.01" disabled> <span id="jiggleValue_scissors" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-scissors"> <label
+                        for="separationDistanceSlider_scissors">Separation Dist (xSize):</label> <input type="range"
+                        id="separationDistanceSlider_scissors" min="0" max="1" step="0.1" disabled> <span
+                        id="separationDistanceValue_scissors" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-scissors"> <label
+                        for="separationStrengthSlider_scissors">Separation Str:</label> <input type="range"
+                        id="separationStrengthSlider_scissors" min="0" max="3" step="0.1" disabled> <span
+                        id="separationStrengthValue_scissors" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-scissors"> <label
+                        for="detectionRadiusSlider_scissors">Detection Radius (xSize):</label> <input type="range"
+                        id="detectionRadiusSlider_scissors" min="2" max="101" step="1" disabled> <span
+                        id="detectionRadiusValue_scissors" class="value-display"></span></div>
+                <div class="setting-row type-setting type-setting-scissors"> <label
+                        for="predationRadiusSlider_scissors">Predation Radius (xSize):</label> <input type="range"
+                        id="predationRadiusSlider_scissors" min="0.5" max="3" step="0.1" disabled> <span
+                        id="predationRadiusValue_scissors" class="value-display"></span></div>
+                <div class="col-span-full md:col-span-3 text-center type-setting type-setting-scissors"> <button
+                        id="resetScissorsDefaultsButton" class="reset-defaults-button">Reset Scissors to
+                        Defaults</button> </div>
+            </div>
+        </div>
+
+        <canvas id="simulationCanvas" width="400" height="400"></canvas>
+    </div>
+
+    <!-- Load JavaScript modules -->
+    <script src="config.js" defer></script>
+    <script src="entity.js" defer></script>
+    <script src="simulation.js" defer></script>
+    <script src="stats.js" defer></script>
+    <script src="timeseries.js" defer></script>
+    <script src="export.js" defer></script>
+    <script src="canvas-reset.js" defer></script>
+    <script src="ui.js" defer></script>
+</body>
+
+</html>
