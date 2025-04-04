@@ -17,6 +17,14 @@ describe('Stats Module', () => {
     window.avgLifespanDisplay = document.getElementById('avgLifespanDisplay');
     window.conversionRateDisplay = document.getElementById('conversionRateDisplay');
     window.avgSpeedDisplay = document.getElementById('avgSpeedDisplay');
+    
+    // Ensure classList.contains returns the correct value for testing
+    window.entityCountsDiv.classList.contains = jest.fn().mockImplementation((className) => {
+      if (className === 'stats-hidden') {
+        return !window.statsVisible;
+      }
+      return false;
+    });
   });
 
   test('formatKDR should format kill/death ratio correctly', () => {
