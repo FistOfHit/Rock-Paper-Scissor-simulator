@@ -77,8 +77,8 @@ npm run format
 ## Screenshots
 
 <p align="center">
-  <img src="./images/rps_screenshot.png" alt="Gameplay Screenshot">
-  <img src="./images/rps_settings.png" alt="Advanced Settings">
+  <img src="images/rps_screenshot.png" alt="Gameplay Screenshot">
+  <img src="images/rps_settings.png" alt="Advanced Settings">
 </p>
 
 ## Technologies Used

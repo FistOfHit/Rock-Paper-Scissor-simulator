@@ -122,9 +122,7 @@ function updateStatsDisplay() {
         // Apply visibility based on statsVisible (counts always visible when adv menu closed)
         allStatsElements.forEach(el => {
             if (el) {
-                if (el.id === 'entityCounts') {
-                    el.classList.remove('stats-hidden'); // Always show counts
-                } else if (window.statsVisible) {
+                if (window.statsVisible) {
                     el.classList.remove('stats-hidden'); // Show other stats if toggled on
                 } else {
                     el.classList.add('stats-hidden'); // Hide other stats if toggled off
