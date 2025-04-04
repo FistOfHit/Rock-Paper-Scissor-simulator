@@ -1,0 +1,47 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install --save-dev jest jest-environment-jsdom @testing-library/jest-dom
+
+      - name: Create Jest config if it doesn't exist
+        run: |
+          if [ ! -f jest.config.js ]; then
+            echo 'module.exports = {
+              testEnvironment: "jsdom",
+              moduleFileExtensions: ["js"],
+              testMatch: ["**/__tests__/**/*.js", "**/?(*.)+(spec|test).js"],
+              transform: {},
+              setupFilesAfterEnv: ["<rootDir>/jest.setup.js"]
+            };' > jest.config.js
+          fi
+
+      - name: Create Jest setup file if it doesn't exist
+        run: |
+          if [ ! -f jest.setup.js ]; then
+            echo 'require("@testing-library/jest-dom");' > jest.setup.js
+          fi
+
+      - name: Run tests
+        run: npx jest

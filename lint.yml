@@ -1,0 +1,68 @@
+name: Lint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install --save-dev eslint eslint-config-standard eslint-plugin-import eslint-plugin-n eslint-plugin-promise prettier
+
+      - name: Create ESLint config if it doesn't exist
+        run: |
+          if [ ! -f .eslintrc.json ]; then
+            echo '{
+              "extends": "standard",
+              "env": {
+                "browser": true,
+                "es2021": true
+              },
+              "parserOptions": {
+                "ecmaVersion": "latest",
+                "sourceType": "module"
+              },
+              "rules": {
+                "semi": ["error", "always"],
+                "quotes": ["error", "single"]
+              },
+              "globals": {
+                "window": true,
+                "document": true
+              }
+            }' > .eslintrc.json
+          fi
+
+      - name: Create Prettier config if it doesn't exist
+        run: |
+          if [ ! -f .prettierrc.json ]; then
+            echo '{
+              "semi": true,
+              "singleQuote": true,
+              "tabWidth": 2,
+              "trailingComma": "es5",
+              "printWidth": 100
+            }' > .prettierrc.json
+          fi
+
+      - name: Run ESLint
+        run: npx eslint --max-warnings=0 .
+
+      - name: Run Prettier check
+        run: npx prettier --check "**/*.{js,html,css,json}"
