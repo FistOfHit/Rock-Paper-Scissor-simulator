@@ -1,0 +1,37 @@
+{
+  "name": "rock-paper-scissor-simulator",
+  "version": "1.0.0",
+  "description": "A 2D entity-based Rock-Paper-Scissor simulator",
+  "main": "index.html",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "format": "prettier --write \"**/*.{js,html,css,json}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FistOfHit/Rock-Paper-Scissor-simulator.git"
+  },
+  "keywords": [
+    "rock-paper-scissors",
+    "simulation",
+    "game"
+  ],
+  "author": "FistOfHit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FistOfHit/Rock-Paper-Scissor-simulator/issues"
+  },
+  "homepage": "https://github.com/FistOfHit/Rock-Paper-Scissor-simulator#readme",
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "eslint": "^8.38.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "prettier": "^2.8.7"
+  }
+}
