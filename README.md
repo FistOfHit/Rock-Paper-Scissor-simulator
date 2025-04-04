@@ -1,6 +1,6 @@
 # Rock-Paper-Scissor Simulator
 
-[![Deploy to GitHub Pages](https://github.com/FistOfHit/Rock-Paper-Scissor-simulator/actions/workflows/deploy.yml/badge.svg)](https://github.com/FistOfHit/Rock-Paper-Scissor-simulator/actions/workflows/deploy.yml)
+[![Deploy to GitHub Pages](https://github.com/FistOfHit/Rock-Paper-Scissor-simulator/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/FistOfHit/Rock-Paper-Scissor-simulator/actions/workflows/deploy.yml)
 [![Lint](https://github.com/FistOfHit/Rock-Paper-Scissor-simulator/actions/workflows/lint.yml/badge.svg)](https://github.com/FistOfHit/Rock-Paper-Scissor-simulator/actions/workflows/lint.yml)
 [![Test](https://github.com/FistOfHit/Rock-Paper-Scissor-simulator/actions/workflows/test.yml/badge.svg)](https://github.com/FistOfHit/Rock-Paper-Scissor-simulator/actions/workflows/test.yml)
 
