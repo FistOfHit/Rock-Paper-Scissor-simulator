@@ -90,6 +90,7 @@ npm run format
 - **Jest:** JavaScript testing framework.
 - **ESLint & Prettier:** Code quality and formatting.
 - **GitHub Actions:** CI/CD workflows for testing, linting, and deployment.
+  testing
 
 ## Project Structure
 
